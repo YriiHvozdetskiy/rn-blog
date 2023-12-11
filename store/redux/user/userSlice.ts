@@ -3,7 +3,7 @@ import {persistReducer} from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // виносимо операції в окремий файл - ***Actions
-import {login} from '@/store/redux/user/userActions';
+import {login} from '../../../store/redux/user/userActions';
 
 const initialState = {
    token: false,

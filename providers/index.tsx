@@ -2,9 +2,11 @@ import {NavigationContainer} from "@react-navigation/native";
 import {ReactNode, useState} from "react";
 import {SafeAreaView} from "react-native";
 import {Provider} from "react-redux";
+import {PersistGate} from 'redux-persist/integration/react';
+
 import axios from "axios";
 
-import {persistor, store} from "@/store/redux/store";
+import {persistor, store} from "../store/redux/store";
 
 interface Props {
    children: ReactNode
