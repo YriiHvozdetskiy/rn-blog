@@ -1,7 +1,7 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import type {Pokemon} from './types'
+import {createBaseQuery} from "@/utils";
 
 //https://youtu.be/6QCOUqjJXDY - RTQ - Redux Toolkit Query (Репета)
 
@@ -11,30 +11,29 @@ export const pokemonApi = createApi({
    reducerPath: 'pokemonApi',
    // fetchBaseQuery - це аналог axios, fetch
    // baseUrl - це аналог baseURL в axios, BASE_URL
-   baseQuery: fetchBaseQuery({
-      baseUrl: 'https://pokeapi.co/api/v2/',
-      prepareHeaders: (headers, {getState}) => {
-         // getState- це весь store,user(в store) - reducer: {
-         //                                           user: userReducer, (обєкт user)
-         //                                           [pokemonApi.reducerPath]: pokemonApi.reducer,
-         //                                           // інші редюсери
-         //                                         },
-
-         const token = getState().user.token;
-         if (token) {
-            headers.set('authorization', `Bearer ${token}`);
-         }
-         return headers;
-      },
-   }),
+   // baseQuery: fetchBaseQuery({
+   //    baseUrl: 'https://pokeapi.co/api/v2/',
+   //    prepareHeaders: (headers, {getState}) => {
+   //       // getState- це весь store,user(в store) - reducer: {
+   //       //                                           user: userReducer, (обєкт user)
+   //       //                                           [pokemonApi.reducerPath]: pokemonApi.reducer,
+   //       //                                           // інші редюсери
+   //       //                                         },
+   //
+   //       const token = getState().user.token;
+   //       if (token) {
+   //          headers.set('authorization', `Bearer ${token}`);
+   //       }
+   //       return headers;
+   //    },
+   // }),
    // == or == (коли потрібно відправляти з токеном в заголовках)
-   // baseQuery: createBaseQuery(),
+   baseQuery: createBaseQuery(),
 
    // queryKey як в react-query (ключ по якаму буде зберігатися/оновлюватися дані в кеші)
    tagTypes: ['pokemon'],
 
    endpoints: (builder) => ({
-
       // getPokemonByName - довільна назва, яка буде використовуватися в useGetPokemonByNameQuery
       getPokemonByName: builder.query<Pokemon, string>({
          // query: (name) => `pokemon/${name}`,

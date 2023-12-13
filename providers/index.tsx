@@ -7,7 +7,6 @@ import axios from "axios";
 
 import {persistor, store} from "@/store/redux/store";
 
-
 interface Props {
    children: ReactNode
 }
