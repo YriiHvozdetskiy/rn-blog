@@ -15,7 +15,7 @@ const initialState = {
 const userSlice = createSlice({
    name: 'user',
    initialState,
-   // для синхронних операцій
+   // для синхронних операцій (дифолтні редюсери)
    reducers: {
       // setToken(state, action) {
       //    state.token = action.payload;
@@ -24,8 +24,7 @@ const userSlice = createSlice({
       //    state.token = false;
       // },
    },
-
-   // для асинхронних операцій
+   // для асинхронних операцій (кастомні редюсери)
    extraReducers: (builder) => {
       builder
          // є три стана асинхроних ф-цій: pending, fulfilled, rejected

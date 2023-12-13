@@ -1,4 +1,4 @@
-import {configureStore} from '@reduxjs/toolkit';
+import {applyMiddleware, configureStore} from '@reduxjs/toolkit';
 import {
    persistStore,
    FLUSH,
@@ -9,30 +9,42 @@ import {
    REGISTER,
 } from 'redux-persist';
 import {setupListeners} from "@reduxjs/toolkit/query";
+import {composeWithDevTools} from 'remote-redux-devtools';
+import {devToolsEnhancer} from "redux-devtools-extension";
 
 import {userReducer} from '../../store/redux/user/userSlice';
-import {pokemonApi} from "../../store/redux/pokemon";
+import {pokemonApi} from "./pokemon/pokemonApi";
 
+// https://youtu.be/6QCOUqjJXDY?t=4541  mockapi.io
 export const store = configureStore({
-   // reducer замінює combineReducers і об'єднує редюсери в rootReducer
-   // передаємо в об'єкт reducer всі редюсери які будуть використовуватися в проекті
-   reducer: {
-      user: userReducer,
-      // Add the generated reducer as a specific top-level slice
-      //
-      [pokemonApi.reducerPath]: pokemonApi.reducer,
-      // інші редюсери
-   },
-   middleware: getDefaultMiddleware =>
-      getDefaultMiddleware({
-         serializableCheck: {
-            ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-         },
-      }).concat(pokemonApi.middleware),// в кінці до загального масиву middleware додаємо middleware для pokemonApi
-   devTools: process.env.NODE_ENV === 'development', // показує redux-devtools тільки в режимі розробки
-});
+      // reducer замінює combineReducers і об'єднує редюсери в rootReducer
+      // передаємо в об'єкт reducer всі редюсери які будуть використовуватися в проекті
+      reducer: {
+         user: userReducer,
+         // reducerPath - унікальне ім'я для redux api
+         [pokemonApi.reducerPath]: pokemonApi.reducer,
+         // інші редюсери
+      },
+      middleware: getDefaultMiddleware =>
+         getDefaultMiddleware({
+            serializableCheck: {
+               ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            },
+         }).concat(pokemonApi.middleware),// в кінці до загального масиву middleware додаємо middleware для pokemonApi
+      devTools: process.env.NODE_ENV === 'development', // показує redux-devtools тільки в режимі розробки
 
-// опціонально в createApi, коли пропаде інтернет, фокус на вікно, то відправляється запит на сервер
+
+      // enhancers: [devToolsEnhancer({})] // Add the enhancer here
+      // composeWithDevTools: composeWithDevTools(applyMiddleware(getDefaultMiddleware =>
+      //    getDefaultMiddleware({
+      //       serializableCheck: {
+      //          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      //       },
+      //    })))
+   },
+);
+
+// опціонально в createApi, коли пропаде інтернет, фокус на вікно, то відправляється запит на сервер (налаштовується для кожного endpoint окремо)
 setupListeners(store.dispatch)
 
 export const persistor = persistStore(store);
