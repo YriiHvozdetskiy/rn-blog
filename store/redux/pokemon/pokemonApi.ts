@@ -1,8 +1,7 @@
-import {createApi} from '@reduxjs/toolkit/query/react'
+import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import type {Pokemon} from './types'
-import {createBaseQuery} from "../../../utils";
 
 //https://youtu.be/6QCOUqjJXDY - RTQ - Redux Toolkit Query (Репета)
 
@@ -12,24 +11,24 @@ export const pokemonApi = createApi({
    reducerPath: 'pokemonApi',
    // fetchBaseQuery - це аналог axios, fetch
    // baseUrl - це аналог baseURL в axios, BASE_URL
-   // baseQuery: fetchBaseQuery({
-   //    baseUrl: 'https://pokeapi.co/api/v2/',
-   //    prepareHeaders: (headers, {getState}) => {
-   //       // getState- це весь store,user(в store) - reducer: {
-   //       //                                           user: userReducer, (обєкт user)
-   //       //                                           [pokemonApi.reducerPath]: pokemonApi.reducer,
-   //       //                                           // інші редюсери
-   //       //                                         },
-   //
-   //       const token = getState().user.token;
-   //       if (token) {
-   //          headers.set('authorization', `Bearer ${token}`);
-   //       }
-   //       return headers;
-   //    },
-   // }),
+   baseQuery: fetchBaseQuery({
+      baseUrl: 'https://pokeapi.co/api/v2/',
+      prepareHeaders: (headers, {getState}) => {
+         // getState- це весь store,user(в store) - reducer: {
+         //                                           user: userReducer, (обєкт user)
+         //                                           [pokemonApi.reducerPath]: pokemonApi.reducer,
+         //                                           // інші редюсери
+         //                                         },
+
+         const token = getState().user.token;
+         if (token) {
+            headers.set('authorization', `Bearer ${token}`);
+         }
+         return headers;
+      },
+   }),
    // == or == (коли потрібно відправляти з токеном в заголовках)
-   baseQuery: createBaseQuery(),
+   // baseQuery: createBaseQuery(),
 
    // queryKey як в react-query (ключ по якаму буде зберігатися/оновлюватися дані в кеші)
    tagTypes: ['pokemon'],
@@ -49,14 +48,14 @@ export const pokemonApi = createApi({
          //  після виконання мутації, виконується invalidatesTags: ['тег']
          providesTags: ['pokemon'],
          // записуємо дані в AsyncStorage щоб отримувати дані з локальногоСтора
-         async onQueryStarted(name, {queryFulfilled}) {
-            try {
-               const {data} = await queryFulfilled;
-               await AsyncStorage.setItem(`@pokemon/${name}`, JSON.stringify(data));
-            } catch (error) {
-               console.error('Error writing pokemon data to AsyncStorage:', error);
-            }
-         },
+         // async onQueryStarted(name, {queryFulfilled}) {
+         //    try {
+         //       const {data} = await queryFulfilled;
+         //       await AsyncStorage.setItem(`@pokemon/${name}`, JSON.stringify(data));
+         //    } catch (error) {
+         //       console.error('Error writing pokemon data to AsyncStorage:', error);
+         //    }
+         // },
       }),
 
       deletePokemon: builder.mutation<Post, Partial<Post> & Pick<Post, 'id'>>({
@@ -93,6 +92,9 @@ export const pokemonApi = createApi({
 // createApi - це аналог createSlice, який генере хуки н-д: useGetPokemonByNameQuery і тд
 // const { data, error, isLoading } = useGetPokemonByNameQuery('bulbasaur')
 
-// генерація хуків:
-// useGetPokemonByNameQuery = use + getPokemonByName + Query
-export const {useGetPokemonByNameQuery, useDeletePokemonQuery} = pokemonApi
+// генерація хуків для query:
+// useGetPokemonByNameQuery = use + getPokemonByName + Query(хуки генеряться автоматично тому для запитів додаємо Query)
+
+// генерація хуків для mutation:
+// useDeletePokemonMutation = use + deletePokemon + Mutation (хуки генеряться автоматично тому для мутацій додаємо Mutation)
+export const {useGetPokemonByNameQuery, useDeletePokemonMutation} = pokemonApi

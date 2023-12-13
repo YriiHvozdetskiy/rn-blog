@@ -1,6 +1,6 @@
 import {createStackNavigator} from "@react-navigation/stack";
 
-import {navList} from "./mock";
+import {navList} from "@/navigation/mock";
 
 const Stack = createStackNavigator();
 

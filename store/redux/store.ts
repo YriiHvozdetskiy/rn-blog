@@ -12,8 +12,8 @@ import {setupListeners} from "@reduxjs/toolkit/query";
 import {composeWithDevTools} from 'remote-redux-devtools';
 import {devToolsEnhancer} from "redux-devtools-extension";
 
-import {userReducer} from '../../store/redux/user/userSlice';
-import {pokemonApi} from "./pokemon/pokemonApi";
+import {userReducer} from "@/store/redux/user/userSlice";
+import {pokemonApi} from "@/store/redux/pokemon/pokemonApi";
 
 // https://youtu.be/6QCOUqjJXDY?t=4541  mockapi.io
 export const store = configureStore({

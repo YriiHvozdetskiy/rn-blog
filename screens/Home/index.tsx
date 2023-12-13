@@ -1,8 +1,6 @@
 import {View, Text, StyleSheet, Image} from "react-native";
-import {
-   useDeletePokemonQuery,
-   useGetPokemonByNameQuery
-} from "../../store/redux/pokemon/pokemonApi";
+
+import {useDeletePokemonMutation, useGetPokemonByNameQuery} from "@/store/redux/pokemon/pokemonApi";
 
 export default function Home() {
    //https://redux-toolkit.js.org/rtk-query/usage/queries#query-hook-options
@@ -29,8 +27,8 @@ export default function Home() {
 
    // повертає tuple (first: trigger function, second: object with {status, error}, and data etc.)
    //deletePokemon - promise, можем робити то що Репета робив ))
-   // const [deletePokemon, results] = useDeletePokemonQuery();
-// console.log('useDeletePokemonQuery',useDeletePokemonQuery)
+   const [deletePokemon, results] = useDeletePokemonMutation();
+
    //якщо не задати Image source={{uri:****} розміри, то вони не відобразяться
 
    return (

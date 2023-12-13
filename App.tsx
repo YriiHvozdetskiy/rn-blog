@@ -1,5 +1,5 @@
-import Providers from "./providers";
-import Navigation from "./navigation";
+import Providers from "@/providers";
+import Navigation from "@/navigation";
 
 export default function App() {
 

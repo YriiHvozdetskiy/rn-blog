@@ -2,8 +2,9 @@ import {createSlice} from '@reduxjs/toolkit';
 import {persistReducer} from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import {login} from "@/store/redux/user/userActions";
+
 // виносимо операції в окремий файл - ***Actions
-import {login} from '../../../store/redux/user/userActions';
 
 const initialState = {
    token: false,
