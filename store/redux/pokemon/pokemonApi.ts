@@ -1,6 +1,6 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 
-import type {Pokemon} from './types'
+
 import {createBaseQuery} from "@/utils";
 
 //https://youtu.be/6QCOUqjJXDY - RTQ - Redux Toolkit Query (Репета)
@@ -32,10 +32,12 @@ export const pokemonApi = createApi({
 
    // queryKey як в react-query (ключ по якаму буде зберігатися/оновлюватися дані в кеші)
    tagTypes: ['pokemon'],
+   // == or == коли буде один slice  і ми дод до нього багато endpoint див apiSlice.ts
+   // tagTypes: ['Users', 'Products', 'Orders'],
 
    endpoints: (builder) => ({
       // getPokemonByName - довільна назва, яка буде використовуватися в useGetPokemonByNameQuery
-      getPokemonByName: builder.query<Pokemon, string>({
+      getPokemonByName: builder.query({
          // query: (name) => `pokemon/${name}`,
          // ==or==
          query: (name) => ({
@@ -57,13 +59,13 @@ export const pokemonApi = createApi({
          // },
       }),
 
-      deletePokemon: builder.mutation<Post, Partial<Post> & Pick<Post, 'id'>>({
+      deletePokemon: builder.mutation({
             query: ({id}) => ({
                url: `post/${id}`,
                method: 'DELETE',
             }),
             // в тілі відповіді з сервера приходить об'єкт Post, але ми можемо вибрати тільки певні поля і використовувати їх
-            transformResponse: (response: { data: Post }, meta, arg) => response.data,
+            transformResponse: (response: { data: any }, meta, arg) => response.data,
 
             // при виконанні мутації, якщо відповідь з сервера буде помилковою, то виконається ця функція
             transformErrorResponse: (
@@ -75,14 +77,14 @@ export const pokemonApi = createApi({
             invalidatesTags: ['pokemon'],
          },
       ),
-
-      createPokemon: builder.mutation<Post, Partial<Post>>({
+      
+      createPokemon: builder.mutation({
          query: (body) => ({
             url: `post`,
             method: 'POST',
             body,
          }),
-         transformResponse: (response: { data: Post }, meta, arg) => response.data,
+         transformResponse: (response: { data: any }, meta, arg) => response.data,
          invalidatesTags: ['pokemon'],
       }),
    }),
